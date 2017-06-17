@@ -50,12 +50,12 @@ RUN pip install --upgrade seaborn tqdm
 RUN pip install --upgrade pandas
 
 # set up gnuradio and related tools
-RUN pip install --upgrade git+https://github.com/gnuradio/pybombs.git
+RUN pip install --upgrade git+https://github.com/gnuradio/pybombs.git@736f14a752ec76faa5f2b48730f205c5903e8a1d
 RUN mkdir /gr/
 RUN cd /gr/ && pybombs prefix init .
 RUN cd /gr/ && pybombs recipes add gr-recipes git+https://github.com/gnuradio/gr-recipes.git 
 RUN cd /gr/ && pybombs recipes add gr-etcetera git+https://github.com/gnuradio/gr-etcetera.git
-RUN cd /gr/ && pybombs install gnuradio gr-burst gr-pyqt gr-pcap gr-mapper gr-analysis 
+RUN cd /gr/ && pybombs install gnuradio gr-burst gr-pyqt gr-pcap gr-mapper gr-mediatools 
 
 # check out sources for reference
 RUN /bin/ln -s /gr/src/ /home/x2go/src
@@ -66,8 +66,9 @@ RUN cd /home/x2go/src/ && git clone https://github.com/fchollet/keras.git
 # Build PyOpenPNL and Gym deps
 RUN pip install networkx
 RUN apt-get install -y python-numpy python-dev cmake zlib1g-dev libjpeg-dev xvfb libav-tools xorg-dev python-opengl libboost-all-dev libsdl2-dev swig pypy-dev
-RUN cd /home/x2go/src/ && git clone https://github.com/PyOpenPNL/OpenPNL.git && cd OpenPNL && ./autogen.sh &&  ./configure CFLAGS='-g -O2 -fpermissive -w' CXXFLAGS='-g -O2 -fpermissive -w' && make -j4 && make install
-RUN cd /home/x2go/src/ && git clone https://github.com/PyOpenPNL/PyOpenPNL.git && cd PyOpenPNL && python setup.py build && python setup.py install
+RUN cd /home/x2go/src/ && git clone https://github.com/PyOpenPNL/OpenPNL.git && cd OpenPNL && git checkout 19351f372cf524ac00c1167bdffd4af85fd1fed2 && ./autogen.sh &&  ./configure CFLAGS='-g -O2 -fpermissive -w' CXXFLAGS='-g -O2 -fpermissive -w' && make -j4 && make install
+RUN cd /home/x2go/src/ && git clone https://github.com/PyOpenPNL/PyOpenPNL.git && cd PyOpenPNL && git checkout e2d8fdd1906d05d89303c2aad4cb0a9089a0e328 && python setup.py build && python setup.py install
+
 RUN cd /home/x2go/src/ && git clone https://github.com/osh/kerlym.git && cd kerlym && python setup.py build && python setup.py install
 
 # set up OpenAI Gym
