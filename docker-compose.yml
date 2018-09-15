@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+
+  rml:
+    build:
+      context: .
+      dockerfile: Dockerfile.${TARGET}
+      args:
+        ARCH: ${ARCH}
+    image: sofwerx/rml:${ARCH}-${TARGET}
+
